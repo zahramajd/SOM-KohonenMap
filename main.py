@@ -48,6 +48,10 @@ def point_sum(x1,x2):
 def point_multiply_constant(point,value):
     return [value*point[0],value*point[1],value*point[2]]
     
+def gaussian_function(distance, sigma):
+    return np.exp(-0.5 * ((math.pow(distance,2))/math.pow(sigma,2)))
+
+
 # load data
 mat = scipy.io.loadmat('Chainlink.mat')
 data=mat['Chainlink']
@@ -55,11 +59,15 @@ data=mat['Chainlink']
 # split into train & test
 training_data = data[0:800]
 test_data = data[801:]
+units = []
 
 
 training_cycle = 1000
-learning_rate = 0.02
-units = []
+
+learning_rate_0 = 0.1
+learning_rate_constant = 1000
+learning_rate = 0.1
+
 
 # generate random weights
 for i in range(0, 100):
@@ -68,6 +76,7 @@ units = array(units)
 
 
 for i in range(0, training_cycle):
+    learning_rate = learning_rate_0 * np.exp((-1 * i)/learning_rate_constant)
     for j in range(0, len(training_data)):
         min_value=10000
         min_index=0
