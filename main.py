@@ -61,32 +61,31 @@ training_data = data[0:800]
 test_data = data[801:]
 units = []
 
-
-training_cycle = 1000
-
-learning_rate_0 = 0.1
-learning_rate_constant = 1000
-learning_rate = 0.1
-
-
 # generate random weights
 for i in range(0, 100):
     units.append([random(),random(),random()])
 units = array(units)
 
 
+training_cycle = 1700
+
+# learning rate parameters
+learning_rate_0 = 0.1
+learning_rate_constant = 1000
+
+
+sigma_0 = 0.0741
+# sigma_constant = 1000 / (math.log(sigma_0))
+sigma_constant = 394.852
+
 for i in range(0, training_cycle):
     learning_rate = learning_rate_0 * np.exp((-1 * i)/learning_rate_constant)
+    sigma = sigma_0 * np.exp((-1 * i)/sigma_constant)
+
     for j in range(0, len(training_data)):
-        min_value=10000
-        min_index=0
         for k in range(0,len(units)):
             distance = euclidean_distance(training_data[j],units[k])
-            if(distance < min_value):
-                min_value = distance
-                min_index = k
-        
-        units[min_index]= point_sum(units[min_index],point_multiply_constant(point_diff(training_data[j],units[min_index]),learning_rate))
+            units[k]= point_sum(units[k],point_multiply_constant(point_diff(training_data[j],units[k]),
+            learning_rate * gaussian_function(distance,sigma)))
 
 my_plot(training_data, units)
-
