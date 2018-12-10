@@ -73,9 +73,8 @@ training_cycle = 1700
 learning_rate_0 = 0.1
 learning_rate_constant = 1000
 
-
-sigma_0 = 0.0741
 # sigma_constant = 1000 / (math.log(sigma_0))
+sigma_0 = 0.0741
 sigma_constant = 394.852
 
 for i in range(0, training_cycle):
@@ -86,6 +85,24 @@ for i in range(0, training_cycle):
         for k in range(0,len(units)):
             distance = euclidean_distance(training_data[j],units[k])
             units[k]= point_sum(units[k],point_multiply_constant(point_diff(training_data[j],units[k]),
-            learning_rate * gaussian_function(distance,sigma)))
+            learning_rate * gaussian_function(distance,sigma) ))
+
 
 my_plot(training_data, units)
+
+# compute distance between winner neuron and test data
+test_winners = []
+for m in range(0,len(test_data)):
+    min_value = 1000000
+    min_index = -1
+    for n in range(0,len(units)):
+        temp = euclidean_distance(test_data[m],units[n])
+        if (temp < min_value):
+            min_value = temp
+            min_index = n
+    
+    print(min_value)
+    test_winners.append(min_value)
+
+for w in range(0,len(test_data)):
+    print(w,' ',test_winners[w])
